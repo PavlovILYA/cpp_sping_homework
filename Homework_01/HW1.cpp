@@ -65,11 +65,8 @@ int main(int argc, char* argv[])
 			for (int j = m1; j<=m2; j++)
 				if (simple(Data[j]))
 					count++;
-		    cout << count << " ";
+		    cout << count << " "<< endl;
         }
 	}
-        
-    
-    cout << endl;
     return 0;
 }
