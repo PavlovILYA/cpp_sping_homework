@@ -53,13 +53,13 @@ public:
 		rows = r;
 		cols = c;
 		matrix = new int*[rows];
-		for (int i = 0; i < cols; i++)
+		for (int i = 0; i < rows; i++)
 			matrix[i] = new int[cols];
 	}
 
 	~Matrix()
 	{
-		for (int i = 0; i < cols; i++)
+		for (int i = 0; i < rows; i++)
 			delete[] matrix[i];
 		delete[] matrix;
 	}
