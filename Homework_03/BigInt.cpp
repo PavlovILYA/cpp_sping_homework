@@ -15,6 +15,12 @@ int digitCount(int a)
 	return count;
 }
 
+int max(int a, int b)
+{
+	if (a > b) return a;
+	else return b;
+}
+
 class BigInt
 {
 private:
@@ -22,21 +28,22 @@ private:
 	int base = 10000;
 	int maxLen = 100;
 	int* number;
+	bool sign;
 
 public:
-    BigInt()
+	BigInt()
 	{
 		number = new int[maxLen + 1];
-		for (int i = 1; i <= maxlen; i++)
+		for (int i = 1; i <= maxLen; i++)
 		{
 			number[i] = 0;
 		}
 		number[0] = 1;
 	}
 
-    void strToLong(string str)  // используется в конструкторе
+	void strToLong(string str)  // используется в конструкторе
 	{
-		if (a[0] != '-')
+		if (str[0] != '-')
 		{
 			number[0] = (int)ceil((double)str.size() / baseLen); // округляет вверх (2.5 ~ 3 - ?), но работает только с double :c
 			sign = true;
@@ -45,29 +52,30 @@ public:
 		{
 			sign = false;
 			number[0] = (int)ceil((double)(str.size() - 1) / baseLen); // округляет вверх (2.5 ~ 3 - ?), но работает только с double :c
-            str.erase(0, 1);
+			str.erase(0, 1);
 		}
-        string cur;
-        for (i = 1; i <= number[0] - 1; i++)
-			{
-				cur = str.substr(strlen - i*baseLen, baseLen);
-				number[i] = atoi(cur.c_str()); // c_str добавил, потому что иначе не работало --> https://ru.stackoverflow.com/questions/730050/%D0%A7%D0%B5%D0%BC-%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%D0%B8%D1%82%D1%8C-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D1%8E-stoi
-			}
-			cur = str.substr(0, str.size() - (i - 1)*baseLen);
-			number[number[0]] = atoi(cur.c_str());
+		string cur;
+		int i = 0;
+		for (i = 1; i <= number[0] - 1; i++)
+		{
+			cur = str.substr(str.size() - i*baseLen, baseLen);
+			number[i] = atoi(cur.c_str()); // c_str добавил, потому что иначе не работало --> https://ru.stackoverflow.com/questions/730050/%D0%A7%D0%B5%D0%BC-%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%D0%B8%D1%82%D1%8C-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D1%8E-stoi
+		}
+		cur = str.substr(0, str.size() - (i - 1)*baseLen);
+		number[number[0]] = atoi(cur.c_str());
 	}
 
 	BigInt(int64_t num)
-    {
-        number = new int[maxLen + 1];
+	{
+		number = new int[maxLen + 1];
 		string str = to_string(num);
 		this->strToLong(str);
-    }
+	}
 
-    ~BigInt()
-    {
-        delete[] number;
-    }
+	~BigInt()
+	{
+		delete[] number;
+	}
 
 	BigInt &operator= (int64_t num)
 	{
@@ -78,12 +86,12 @@ public:
 
 	BigInt &operator= (const BigInt &B)  // &?
 	{
-		namber = B.number;
+		number = B.number;
 		sign = B.sign;
 		return *this;
 	}
 
-	BigInt longDif(const BigInt &B) // заведомо this больше B !!!
+	BigInt longDif(const BigInt B) // заведомо this больше B !!!  // &B or B ??
 	{
 		BigInt C;
 		C.sign = true;
@@ -107,7 +115,7 @@ public:
 		return C;
 	}
 
-	BigInt longSum(const BigInt &B)
+	BigInt longSum(const BigInt B)
 	{
 		BigInt C;
 		C.sign = B.sign;
@@ -142,7 +150,7 @@ public:
 		return *this;
 	}
 
-	BigInt operator-() const 
+	BigInt operator-() const
 	{
 		BigInt C = *this;
 		C.sign = !sign;
@@ -217,7 +225,7 @@ public:
 	bool operator<=(int64_t num) const    // (2)  int64_t
 	{
 		BigInt B(num);
-		return *this<=B;
+		return *this <= B;
 	}
 
 	bool operator>=(const BigInt &B) const    // (1)  BigInt
@@ -231,7 +239,7 @@ public:
 	bool operator>=(int64_t num) const    // (2)  int64_t
 	{
 		BigInt B(num);
-		return *this>=B;
+		return *this >= B;
 	}
 
 	bool operator==(const BigInt &B) const    // (1)  BigInt
@@ -245,7 +253,7 @@ public:
 	bool operator==(int64_t num) const    // (2)  int64_t
 	{
 		BigInt B(num);
-		return *this==B;
+		return *this == B;
 	}
 
 	bool operator!=(const BigInt &B) const    // (1)  BigInt
@@ -259,16 +267,8 @@ public:
 	bool operator!=(int64_t num) const    // (2)  int64_t
 	{
 		BigInt B(num);
-		return *this!=B;
+		return *this != B;
 	}
-
-
-
-
-
-
-
-	
 
 
 }
