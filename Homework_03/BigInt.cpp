@@ -320,8 +320,49 @@ public:
 		return *this != B;
 	}
 
+	/*
+	void show()
+	{
+		if (!sign)
+			cout << "-";
+		cout << number[number[0]];
+		for (int i = number[0] - 1; i > 0; i--) // >=
+		{
+			int de = digitCount(number[i]);
+			if (de == baseLen)
+			{
+				cout << number[i];
+				continue;
+			}
+			for (int j = 0; j < baseLen - de; j++)
+				cout << "0";
+			cout << number[i];
+		}
+	}
+	*/
 
+	friend std::ostream &operator<<(std::ostream &str, const BigInt &);
 };
+
+std::ostream &operator<<(std::ostream &str, const BigInt &B) 
+{
+	if (!B.sign)
+		str << "-";
+	str << B.number[B.number[0]];
+	for (int i = B.number[0] - 1; i > 0; i--) // >=
+	{
+		int base = digitCount(B.number[i]);
+		if (base == B.baseLen)
+		{
+			str << B.number[i];
+			continue;
+		}
+		for (int j = 0; j < B.baseLen - base; j++)
+			str << "0";
+		str << B.number[i];
+	}
+	return str;
+}
 
 
 int main()
