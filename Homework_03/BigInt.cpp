@@ -55,10 +55,10 @@ private:
 		number[number[0]] = atoi(cur.c_str());
 	}
 
-	BigInt longSum(const BigInt &B)  // используется в перегрузке операторов +=, +
+	BigInt longSum(const BigInt &B)  // используется в перегрузке операторов +=, -=
 	{
 		BigInt C;
-		C.sign = B.sign;
+		C.sign = sign;      // возвращает BigInt со знаком, как у *this
 		int m = max(number[0], B.number[0]);
 		int buffer = 0;
 		for (int i = 1; i <= m; i++)
@@ -81,7 +81,7 @@ private:
 	BigInt longDif(const BigInt &B)      // используется в перегрузке операторов -, +
 	{									// заведомо this больше B !!!  // &B or B ??
 		BigInt C;
-		C.sign = true;
+		C.sign = true;      // возвращает "положительный" BigInt
 		int m = number[0];
 		int buffer = 0;
 		for (int i = 1; i <= m; i++)
@@ -154,14 +154,14 @@ public:
 		delete[] number;
 	}
 
-	BigInt &operator= (int64_t num)
+	BigInt &operator=(int64_t num)
 	{
 		string str = to_string(num);
 		this->strToLong(str);
 		return *this;
 	}
 
-	BigInt &operator= (const BigInt &B)  // &?
+	BigInt &operator=(const BigInt &B)  // &?
 	{
 		number = B.number;
 		sign = B.sign;
@@ -184,11 +184,56 @@ public:
 		return *this;
 	}
 
+	BigInt operator+(const BigInt &B) const 
+	{
+		BigInt C = *this;
+		C += B;
+		return C;
+	}
+
+	BigInt operator+(int64_t& num)
+	{
+		BigInt B = num;
+		return *this + B;
+	}
+
 	BigInt operator-() const
 	{
 		BigInt C = *this;
 		C.sign = !sign;
 		return C;
+	}
+
+	BigInt &operator-=(const BigInt &B)
+	{
+		if (sign != B.sign)
+			if (sign == true)
+				*this = this->longSum(-B);  // *this - (-B)  ->  *this + B
+			else
+				*this = -(this->longSum(B));
+		else
+			if (sign == true)
+				*this = this->longDif(B);
+			else
+			{
+				BigInt C = *this;
+				BigInt D = B;
+				*this = D.longDif(C);          // изначально было *this = B.longDif(*this), но ругалось
+			}
+		return *this;
+	}
+
+	BigInt operator-(const BigInt &B) const
+	{
+		BigInt C = *this;
+		C -= B;
+		return C;
+	}
+
+	BigInt operator-(int64_t& num) 
+	{
+		BigInt B = num;
+		return *this - B;
 	}
 
 	bool operator<(const BigInt &B) const    // (1)  BigInt
