@@ -151,7 +151,7 @@ public:
 
 	~BigInt()
 	{
-		delete[] number;
+		//delete[] number;
 	}
 
 	BigInt &operator=(int64_t num)
